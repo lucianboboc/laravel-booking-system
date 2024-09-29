@@ -3,7 +3,6 @@
 use App\Bookings\ServiceSlotAvailability;
 use App\Bookings\Slot;
 use App\Models\Appointment;
-use App\Models\Appointment as AppointmentAlias;
 use App\Models\Employee;
 use App\Models\Service;
 use App\Models\Schedule;
@@ -135,9 +134,34 @@ it('ignore cancelled appointment', function () {
 
     expect($slots)
         ->toContain("11:30:00")
-        ->not->toContain("12:00:00")
-        ->not->toContain("12:30:00")
+        ->toContain("12:00:00")
+        ->toContain("12:30:00")
         ->toContain("13:00:00");
 
-    expect($availability->first()->slots)->toHaveCount(14);
+    expect($availability->first()->slots)->toHaveCount(16);
+});
+
+it('shows multiple employees available for a service', function () {
+    Carbon::setTestNow(Carbon::parse('1st January 2000'));
+
+    $service = Service::factory()->create([
+        'duration' => 30,
+    ]);
+
+    $employees = Employee::factory()
+        ->count(2)
+        ->has(Schedule::factory()->state([
+            'starts_at' => now()->startOfDay(),
+            'ends_at' => now()->endOfDay(),
+        ]))
+        
+        ->create();
+
+    $availability = (new ServiceSlotAvailability($employees, $service))
+        ->forPeriod(
+            now()->startOfDay(),
+            now()->endOfDay()
+        );
+
+    expect($availability->first()->slots->first()->employees)->toHaveCount(2);
 });
