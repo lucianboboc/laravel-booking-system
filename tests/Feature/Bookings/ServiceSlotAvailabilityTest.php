@@ -154,7 +154,7 @@ it('shows multiple employees available for a service', function () {
             'starts_at' => now()->startOfDay(),
             'ends_at' => now()->endOfDay(),
         ]))
-        
+
         ->create();
 
     $availability = (new ServiceSlotAvailability($employees, $service))

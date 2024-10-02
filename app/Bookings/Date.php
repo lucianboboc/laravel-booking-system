@@ -22,4 +22,11 @@ class Date
     public function hasSlots() {
         return !$this->slots->isEmpty();
     }
+
+    public function containsSlot(string $time)
+    {
+        return $this->slots->search(
+            fn (Slot $slot) => $slot->time->format('H:i') === $time
+        );
+    }
 }

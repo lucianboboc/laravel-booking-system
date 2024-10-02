@@ -32,4 +32,9 @@ class Appointment extends Model
     {
         return $this->belongsTo(Employee::class);
     }
+
+    public function cancelled()
+    {
+        return !is_null($this->cancelled_at);
+    }
 }

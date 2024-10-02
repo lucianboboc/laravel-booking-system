@@ -23,7 +23,6 @@ class ServiceSlotAvailability
         $slotsDateRange = (new SlotRangeGenerator($startsAt, $endsAt))->generate($this->service->duration);
 
         $this->employees->each(function (Employee $employee) use ($startsAt, $endsAt, &$slotsDateRange) {
-            // get availability for employee
             $periods = (new ScheduleAvailability($employee, $this->service))
                 ->forPeriod($startsAt, $endsAt);
 
@@ -34,9 +33,6 @@ class ServiceSlotAvailability
             }
 
             $slotsDateRange = $this->removeEmptySlots($slotsDateRange);
-
-            // add the available employees to the $slotsDateRange
-
         });
 
         return $slotsDateRange;
@@ -61,8 +57,7 @@ class ServiceSlotAvailability
     {
         return $range->filter(function (Date $date) {
             $date->slots = $date->slots->filter(fn (Slot $slot) => $slot->hasEmployees());
-//            return $date->hasSlots();
-            return true;
+            return true;    // use $date->hasSlots() if dates with no slots should be removed
         });
     }
 

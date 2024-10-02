@@ -1,0 +1,5 @@
+:host {
+    --day-width: 60px;
+    --day-height: 60px;
+    --color-bg-locked: #cbd5e1;
+}

@@ -10,4 +10,9 @@ class DateCollection extends Collection
     {
         return $this->first(fn (Date $date) => $date->slots->count() >= 1);
     }
+
+    public function hasSlots()
+    {
+        return $this->filter(fn (Date $date) => $date->hasSlots());
+    }
 }
